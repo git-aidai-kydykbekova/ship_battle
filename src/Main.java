@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Scanner;
@@ -5,6 +6,13 @@ import java.util.Scanner;
 public class Main
 {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("What is your name?");
+        String name = scanner.nextLine();
+        int attempts = 0;
+
+
         String [] [] table = new String [7] [7];
         for(int i = 0; i < 7; i++) {
             for(int j = 0; j < 7; j++) {
@@ -18,35 +26,57 @@ public class Main
                 userTable[i][j] = "0";
             }
         }
+        printUserTable(userTable);
+
+
+        createTreeDeskShips(table);
+        createTwoDeskShip(table);
+        createOneDeskShip(table);
+
         for(int i = 0; i < 7; i++) {
             for(int j = 0; j < 7; j++) {
-                System.out.print(userTable[i][j] + " ");
+                System.out.print(table[i][j] + " ");//////for checking
             }
             System.out.println();
         }
-        createTreeDeskShips(table);
-        userTried(table,userTable);
 
+        userTried(table,userTable,attempts);
 
+        ArrayList<Integer> arrayAttempts = new ArrayList<Integer>();
+        ArrayList<String> arrayNames = new ArrayList<String>();
+
+        arrayAttempts.add(attempts);
+        arrayNames.add(name);
+
+        System.out.println("Do you want to play again?");
+        System.out.println("1 - YES");
+        System.out.println("0 - NO");
+
+        int answer = scanner.nextInt();
+//        if(answer == 1) {
+//
+//        }
 
     }
-    public static void userTried(String [] [] table,String [] [] userTable) {
+    public static void userTried(String [] [] table,String [] [] userTable, int attempts) {
         Scanner scanner = new Scanner(System.in);
         boolean isHit = false;
 
 
         int k = 0;
-        while(k<10) {
+        while(k<6) {
             System.out.println("Enter the coordinates ");
 
             int coordinate1 = scanner.nextInt();
             int coordinate2 = scanner.nextInt();
+            attempts++;
 
             if (table[coordinate1][coordinate2] != "0" && table[coordinate1][coordinate2] != "4") {
                 //isHit = true;
-                if (table[coordinate1][coordinate2] == "1") {
+                if (table[coordinate1][coordinate2] == "1") {   //if it is 1 deck ship
                     clearScreen();
                     System.out.println("SUNK");
+                    k++;
                     userTable[coordinate1][coordinate2] = "◉";
                     for (int i = 0; i < 7; i++) {
                         for (int j = 0; j < 7; j++) {
@@ -54,56 +84,124 @@ public class Main
                         }
                         System.out.println();
                     }
-
-
-                } else if (table[coordinate1][coordinate2] == "2") {
+                    printUserTable(userTable);
+                }
+                else if (table[coordinate1][coordinate2] == "2") {   //if it is 2 deck ship
 
                     clearScreen();
 
-                    if (userTable[coordinate1 + 1][coordinate2] != "X" || userTable[coordinate1 - 1][coordinate2] != "X") { // here dont work
-                        System.out.println("HIT");
+                    if (coordinate1 == 0) {
                         userTable[coordinate1][coordinate2] = "X";
-                        for (int i = 0; i < 7; i++) {
-                            for (int j = 0; j < 7; j++) {
-                                System.out.print(userTable[i][j] + " ");
+                        if (userTable[coordinate1 + 1][coordinate2] == "X") {
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1 + 1][coordinate2] = "◉";
+                            for (int i = 0; i < 7; i++) {
+                                for (int j = 0; j < 7; j++) {
+                                    System.out.print(userTable[i][j] + " ");
+                                }
+                                System.out.println();
                             }
-                            System.out.println();
-                        }
-                    } else if(userTable[coordinate1 + 1][coordinate2] == "X" || userTable[coordinate1 - 1][coordinate2] == "X") {
-                        System.out.println("SUNK");
-                        userTable[coordinate1][coordinate2] = "X";
-
-                        for (int i = 0; i < 7; i++) {
-                            for (int j = 0; j < 7; j++) {
-                                System.out.print(userTable[i][j] + " ");
+                        } else {
+                            System.out.println("HIT");
+                            for (int i = 0; i < 7; i++) {
+                                for (int j = 0; j < 7; j++) {
+                                    System.out.print(userTable[i][j] + " ");
+                                }
+                                System.out.println();
                             }
-                            System.out.println();
                         }
                     }
+                    else if(coordinate1 == 6) {
+                        userTable[coordinate1][coordinate2] = "X";
+                        if (userTable[coordinate1 - 1][coordinate2] == "X") {
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1 + 1][coordinate2] = "◉";
+                        }
+                        else {
+                            System.out.println("HIT");
+                        }
+                    }
+
+                    else {
+                        userTable[coordinate1][coordinate2] = "X";
+                        if (userTable[coordinate1 - 1][coordinate2] == "X" ) {
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1 - 1][coordinate2] = "◉";
+                        }
+                        else if(userTable[coordinate1 + 1][coordinate2] == "X") {
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1 + 1][coordinate2] = "◉";
+                        }
+                        else System.out.println("HIT");
+
+
+                    }
+                    printUserTable(userTable);
                 }
+
+/// krfelnvhufuvnuivbnivnbinbui
                 else if(table[coordinate1][coordinate2] == "3") {
                     clearScreen();
-                    if (userTable[coordinate1][coordinate2+1] != "X" || userTable[coordinate1][coordinate2+1] != "X") { // here don't work
-                        System.out.println("HIT");
-                        userTable[coordinate1][coordinate2] = "X";
-                        for (int i = 0; i < 7; i++) {
-                            for (int j = 0; j < 7; j++) {
-                                System.out.print(userTable[i][j] + " ");
-                            }
-                            System.out.println();
-                        }
-                    }
-                    else if(userTable[coordinate1][coordinate2+1] == "X" || userTable[coordinate1][coordinate2+1] == "X") {
-                        System.out.println("SUNK");
-                        userTable[coordinate1][coordinate2] = "X";
+                    userTable[coordinate1][coordinate2] = "X";
 
-                        for (int i = 0; i < 7; i++) {
-                            for (int j = 0; j < 7; j++) {
-                                System.out.print(userTable[i][j] + " ");
-                            }
-                            System.out.println();
+                    if (coordinate2 == 0) { // check only from right side
+                        if (userTable[coordinate1][coordinate2 + 1] == "X" && userTable[coordinate1][coordinate2 + 2] == "X") {
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1][coordinate2 + 1] = "◉";
+                            userTable[coordinate1][coordinate2 + 2] = "◉";
+                        } else if (userTable[coordinate1][coordinate2 + 1] == "X" || userTable[coordinate1][coordinate2 + 2] == "X") {
+                            System.out.println("HIT");
                         }
+
                     }
+                    else if(coordinate2 == 6) { // check only from left side
+                        if (userTable[coordinate1][coordinate2 - 1] == "X" && userTable[coordinate1][coordinate2 - 2] == "X") {
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1][coordinate2 - 1] = "◉";
+                            userTable[coordinate1][coordinate2 - 2] = "◉";
+                        } else if (userTable[coordinate1][coordinate2 - 1] == "X" || userTable[coordinate1][coordinate2 - 2] == "X") {
+                            System.out.println("HIT");
+                        }
+
+                    }
+                    else {
+                        if(userTable[coordinate1][coordinate2 - 1] == "X" && userTable[coordinate1][coordinate2 + 1] == "X" ) {
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1][coordinate2 - 1] = "◉";
+                            userTable[coordinate1][coordinate2 + 1] = "◉";
+                        }
+                        else if(userTable[coordinate1][coordinate2 + 1] == "X" && userTable[coordinate1][coordinate2 + 2] == "X") {
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1][coordinate2 + 2] = "◉";
+                            userTable[coordinate1][coordinate2 + 1] = "◉";
+                        }
+                        else if( userTable[coordinate1][coordinate2 - 1] == "X" && userTable[coordinate1][coordinate2 - 2] == "X"){
+                            System.out.println("SUNK");
+                            k++;
+                            userTable[coordinate1][coordinate2] = "◉";
+                            userTable[coordinate1][coordinate2 - 2] = "◉";
+                            userTable[coordinate1][coordinate2 - 1] = "◉";
+                        }
+                        else System.out.println("HIT");
+                    }
+
+                     printUserTable(userTable);
 
                 }
 
@@ -113,22 +211,14 @@ public class Main
                 clearScreen();
                 System.out.println("MISS");
                 userTable [coordinate1][coordinate2] = "*";
-                for(int i = 0; i < 7; i++) {
-                    for(int j = 0; j < 7; j++) {
-                        System.out.print(userTable[i][j] + " ");
-                    }
-                    System.out.println();
-                }
+                printUserTable(userTable);
             }
         }
 
+        System.out.println(" !!!!!! CONGRATULATIONS !!!!!");
 
-        for(int i = 0; i < 7; i++) {
-            for(int j = 0; j < 7; j++) {
-                System.out.print(userTable[i][j] + " ");
-            }
-            System.out.println();
-        }
+
+    printUserTable(userTable);
     }
     public static void createOneDeskShip(String [] [] table) {
         Random random = new Random();
@@ -263,8 +353,6 @@ public class Main
         int x = 0;
         int y = 0;
 
-
-
         while(isMatch == false){
             x = random.nextInt(7);
             y = random.nextInt(7);
@@ -293,19 +381,21 @@ public class Main
             }
         }
 
-        createTwoDeskShip(table);
-        createOneDeskShip(table);
+//        createTwoDeskShip(table);
+//        createOneDeskShip(table);
 
-//        for(int i = 0; i < 7; i++) {
-//            for(int j = 0; j < 7; j++) {
-//                System.out.print(table[i][j] + " ");
-//            }
-//            System.out.println();
-//        }
     }
     public static void clearScreen() {
         System.out.print("\033[H\033[2J");
-        //System.out.flush();
+    }
+
+    public static void printUserTable(String [] [] userTable) {
+        for(int i = 0; i < 7; i++) {
+            for(int j = 0; j < 7; j++) {
+                System.out.print(userTable[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 }
 
