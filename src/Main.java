@@ -54,7 +54,7 @@ public class Main
         printUserTable(userTable);
 
 
-        createTreeDeskShips(table);
+        createThreeDeskShips(table);
         createTwoDeskShip(table);
         createOneDeskShip(table);
 
@@ -371,7 +371,7 @@ public class Main
         }
     }
 
-    public static void createTreeDeskShips(String [] [] table) {
+    public static void createThreeDeskShips(String [] [] table) {
         Random random = new Random();
 
         boolean isMatch = false;
